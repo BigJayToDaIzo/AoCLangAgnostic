@@ -1,3 +1,5 @@
+use ecow::EcoString;
+
 fn main() {
     let input = "iwrupvqb";
     for num in 0..u32::MAX {
