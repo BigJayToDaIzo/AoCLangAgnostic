@@ -46,7 +46,6 @@ fn main() {
             }
             _ => (),
         }
-        // if sled point is in vector do nothing
         if iter % 2 == 0 {
             if !grid.contains(&sled) {
                 grid.push(sled);
@@ -54,7 +53,6 @@ fn main() {
         } else if !grid.contains(&robo_sled) {
             grid.push(robo_sled);
         }
-        // else insert sled point into grid
     }
     dbg!(grid.len());
 }
