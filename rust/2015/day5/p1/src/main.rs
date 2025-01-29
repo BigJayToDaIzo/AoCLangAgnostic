@@ -1,7 +1,6 @@
 use std::fs;
 
 fn main() {
-    // read in input.txt
     let input = fs::read_to_string("../input.txt").unwrap();
     let lines = input.lines();
     let mut nice_words = 0;
@@ -25,7 +24,6 @@ fn main() {
         nice_words_vec.push(line);
     }
     println!("{}", nice_words);
-    // dbg!(nice_words_vec);
 }
 
 fn contains_double_letter(s: &str) -> bool {
