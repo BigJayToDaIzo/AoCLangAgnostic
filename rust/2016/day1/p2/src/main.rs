@@ -10,7 +10,7 @@ fn main() {
         pos: Point { x: 0, y: 0 },
         dir: Direction::N,
     };
-    let mut visited: Vec<Point> = Vec::new();
+    let mut visited: Vec<Point> = vec![Point { x: 0, y: 0 }];
     for value in v {
         let value = value.trim();
         turn_dir = &value[0..1];
