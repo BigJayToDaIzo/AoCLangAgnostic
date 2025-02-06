@@ -1,0 +1,22 @@
+[package]
+name = "day-01"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+nom = { workspace = true }
+fancy-regex = { workspace = true }
+regex = { workspace = true }
+rstest = { workspace = true }
+test-log = { workspace = true }
+tracing = { workspace = true }
+watch = "0.2.3"
+
+[dev-dependencies]
+criterion = "0.5.1"
+
+[[bench]]
+name = "benches"
+harness = false

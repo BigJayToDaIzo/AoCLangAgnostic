@@ -57,7 +57,7 @@ fn travel_and_check_n(p_start: &Point, travel_dist: &i32, vec: &mut Vec<Point>) 
 //
 fn travel_and_check_s(p_start: &Point, travel_dist: &i32, vec: &mut Vec<Point>) {
     let end_block = p_start.y - travel_dist;
-    for block in p_start.y - 1..=end_block {
+    for block in (end_block..=p_start.y - 1).rev() {
         let p = Point {
             x: p_start.x,
             y: block,
@@ -89,7 +89,7 @@ fn travel_and_check_e(p_start: &Point, travel_dist: &i32, vec: &mut Vec<Point>) 
 }
 fn travel_and_check_w(p_start: &Point, travel_dist: &i32, vec: &mut Vec<Point>) {
     let end_block = p_start.x - travel_dist;
-    for block in p_start.x - 1..=end_block {
+    for block in (end_block..=p_start.x - 1).rev() {
         let p = Point {
             x: block,
             y: p_start.y,
