@@ -3,11 +3,28 @@ pub fn read_lines() -> String {
 }
 
 pub fn part_one(inp: &str) -> String {
-    inp.to_string()
+    let mut rt = 0;
+    let v: Vec<char> = inp.trim_end().chars().collect();
+    for i in 0..v.len() {
+        if i == v.len() - 1 && v[i] == v[0] {
+            rt += v[i].to_digit(10).unwrap();
+        }
+        if i != v.len() - 1 && v[i] == v[i + 1] {
+            rt += v[i].to_digit(10).unwrap();
+        }
+    }
+    rt.to_string()
 }
 
 pub fn part_two(inp: &str) -> String {
-    "".to_string()
+    let mut rt = 0;
+    let v: Vec<char> = inp.trim_end().chars().collect();
+    for i in 0..v.len() {
+        if v[i] == v[(i + v.len() / 2) % v.len()] {
+            rt += v[i].to_digit(10).unwrap();
+        }
+    }
+    rt.to_string()
 }
 
 #[cfg(test)]
