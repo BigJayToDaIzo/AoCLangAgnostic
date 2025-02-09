@@ -80,7 +80,6 @@ pub fn part_two(inp: &str) -> String {
         }
         _seen_banks += 1;
     }
-    dbg!(seen_bank_configs.len());
     (seen_bank_configs.len() as u32 - magic_bank as u32).to_string()
 }
 
