@@ -4,14 +4,13 @@ members = [
     "day-01",
     "day-02",
     "day-03",
+    "day-04",
 ]
 resolver = "2"
 
 [workspace.dependencies]
-criterion = "0.5.1"
 fancy-regex = "0.14.0"
 nom = "7.1.3"
-rayon = "1.10.0"
 regex = "1.11.1"
 rstest = "0.23.0"
 tracing = "0.1.41"
@@ -20,10 +19,3 @@ tracing = "0.1.41"
 version = "0.2.16"
 features = ["trace"]
 default-features = false
-
-[workspace.dependencies.tracing-subscriber]
-version = "0.3.19"
-features = [
-    "fmt",
-    "env-filter",
-]
