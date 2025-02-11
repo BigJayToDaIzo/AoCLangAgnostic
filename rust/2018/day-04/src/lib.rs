@@ -36,17 +36,14 @@ pub fn part_one(inp: &str) -> String {
             }
         }
     }
-    // analyze sleep logs
     // build heat map of times slept per minute
     let mut heat_map: HashMap<u32, HeatMap> = HashMap::new();
     for log in sleep_logs {
-        // build heatmap for log
-        let mut ht_map = heat_map.entry(log.id).or_insert(HeatMap {
+        let ht_map = heat_map.entry(log.id).or_insert(HeatMap {
             id: log.id,
             heat_map: [0; 60],
             total_slept: 0,
         });
-        // we have either a new or existing heatmap
         for i in 0..log.sleep_grid.len() {
             if log.sleep_grid[i] == 1 {
                 ht_map.heat_map[i] += 1;
@@ -54,9 +51,24 @@ pub fn part_one(inp: &str) -> String {
             }
         }
     }
-    // we're almost there, heat map poppin'
-
-    "".to_string()
+    // we must find id of biggest sleeper
+    let mut max_id = 0;
+    let mut slept_max = 0;
+    for (id, map) in &heat_map {
+        if map.total_slept > slept_max {
+            slept_max = map.total_slept;
+            max_id = *id;
+        }
+    }
+    // we need the index of the peak of the heatmap
+    let sleepiest_elf_hm = &heat_map.get(&max_id).unwrap();
+    let mut sleepiest_minute = 0;
+    for min in 0..sleepiest_elf_hm.heat_map.len() {
+        if sleepiest_elf_hm.heat_map[min] > sleepiest_elf_hm.heat_map[sleepiest_minute] {
+            sleepiest_minute = min;
+        }
+    }
+    (sleepiest_minute as u32 * max_id).to_string()
 }
 
 pub fn part_two(_inp: &str) -> String {
