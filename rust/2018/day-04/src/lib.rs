@@ -11,46 +11,9 @@ pub fn part_one(inp: &str) -> String {
         let (dt, event) = parse_line(line);
         clock.insert(dt, event);
     }
-    let mut sleep_logs: Vec<SleepLog> = Vec::new();
-    for (date, event) in clock {
-        match event {
-            Event::BeginShift(id) => {
-                sleep_logs.push(SleepLog {
-                    id,
-                    date,
-                    sleep_start: 0,
-                    sleep_grid: [0; 60],
-                });
-            }
-            Event::Sleep => {
-                let mut popped_log = sleep_logs.pop().unwrap();
-                popped_log.sleep_start = date.minute();
-                sleep_logs.push(popped_log);
-            }
-            Event::Wake => {
-                let mut popped_log = sleep_logs.pop().unwrap();
-                for minute in popped_log.sleep_start..=date.minute() {
-                    popped_log.sleep_grid[minute as usize] += 1;
-                }
-                sleep_logs.push(popped_log);
-            }
-        }
-    }
+    let sleep_logs = build_sleep_logs(clock);
     // build heat map of times slept per minute
-    let mut heat_map: HashMap<u32, HeatMap> = HashMap::new();
-    for log in sleep_logs {
-        let ht_map = heat_map.entry(log.id).or_insert(HeatMap {
-            id: log.id,
-            heat_map: [0; 60],
-            total_slept: 0,
-        });
-        for i in 0..log.sleep_grid.len() {
-            if log.sleep_grid[i] == 1 {
-                ht_map.heat_map[i] += 1;
-                ht_map.total_slept += 1;
-            }
-        }
-    }
+    let heat_map = build_heat_map(&sleep_logs);
     // we must find id of biggest sleeper
     let mut max_id = 0;
     let mut slept_max = 0;
@@ -71,8 +34,75 @@ pub fn part_one(inp: &str) -> String {
     (sleepiest_minute as u32 * max_id).to_string()
 }
 
-pub fn part_two(_inp: &str) -> String {
-    "".to_string()
+pub fn part_two(inp: &str) -> String {
+    // 1) abstract all the copy/paste code from pt 1 into functions
+    let mut clock: BTreeMap<DateTime<Utc>, Event> = BTreeMap::new();
+    for line in inp.lines() {
+        let (dt, event) = parse_line(line);
+        clock.insert(dt, event);
+    }
+    let sleep_logs = build_sleep_logs(clock);
+    // build heat map of times slept per minute
+    let heat_map = build_heat_map(&sleep_logs);
+    // find peak of entire heat map
+    let mut map_peak_count = 0;
+    let mut map_peak_minute = 0;
+    let mut map_peak_id = 0;
+    for (i, map) in heat_map {
+        for minute in 0..map.heat_map.len() {
+            if map.heat_map[minute] > map_peak_count {
+                map_peak_count = map.heat_map[minute];
+                map_peak_minute = minute;
+                map_peak_id = i;
+            }
+        }
+    }
+    (map_peak_minute as u32 * map_peak_id).to_string()
+}
+
+fn build_heat_map(sleep_logs: &Vec<SleepLog>) -> HashMap<u32, HeatMap> {
+    let mut heat_map: HashMap<u32, HeatMap> = HashMap::new();
+    for log in sleep_logs {
+        let ht_map = heat_map.entry(log.id).or_insert(HeatMap {
+            heat_map: [0; 60],
+            total_slept: 0,
+        });
+        for i in 0..log.sleep_grid.len() {
+            if log.sleep_grid[i] == 1 {
+                ht_map.heat_map[i] += 1;
+                ht_map.total_slept += 1;
+            }
+        }
+    }
+    heat_map
+}
+
+fn build_sleep_logs(clock: BTreeMap<DateTime<Utc>, Event>) -> Vec<SleepLog> {
+    let mut sleep_logs: Vec<SleepLog> = Vec::new();
+    for (date, event) in clock {
+        match event {
+            Event::BeginShift(id) => {
+                sleep_logs.push(SleepLog {
+                    id,
+                    sleep_start: 0,
+                    sleep_grid: [0; 60],
+                });
+            }
+            Event::Sleep => {
+                let mut popped_log = sleep_logs.pop().unwrap();
+                popped_log.sleep_start = date.minute();
+                sleep_logs.push(popped_log);
+            }
+            Event::Wake => {
+                let mut popped_log = sleep_logs.pop().unwrap();
+                for minute in popped_log.sleep_start..=date.minute() {
+                    popped_log.sleep_grid[minute as usize] += 1;
+                }
+                sleep_logs.push(popped_log);
+            }
+        }
+    }
+    sleep_logs
 }
 
 fn parse_line(line: &str) -> (DateTime<Utc>, Event) {
@@ -102,7 +132,6 @@ fn parse_line(line: &str) -> (DateTime<Utc>, Event) {
 
 #[derive(Debug)]
 struct HeatMap {
-    id: u32,
     heat_map: [u32; 60],
     total_slept: u32,
 }
@@ -110,7 +139,6 @@ struct HeatMap {
 #[derive(Debug)]
 struct SleepLog {
     id: u32,
-    date: DateTime<Utc>,
     sleep_start: u32,
     sleep_grid: [u32; 60],
 }
@@ -128,19 +156,19 @@ mod test {
 
     #[test]
     pub fn test_part_one() {
-        let input = "";
+        let input = read_lines();
 
         let res = part_one(&input);
 
-        assert_eq!(res, "");
+        assert_eq!(res, "21083");
     }
 
     #[test]
     pub fn test_part_two() {
-        let input = "";
+        let input = read_lines();
 
         let res = part_two(&input);
 
-        assert_eq!(res, "");
+        assert_eq!(res, "53024");
     }
 }
