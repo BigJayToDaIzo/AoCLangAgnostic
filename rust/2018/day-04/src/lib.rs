@@ -12,9 +12,8 @@ pub fn part_one(inp: &str) -> String {
         clock.insert(dt, event);
     }
     let sleep_logs = build_sleep_logs(clock);
-    // build heat map of times slept per minute
     let heat_map = build_heat_map(&sleep_logs);
-    // we must find id of biggest sleeper
+    // find id of biggest sleeper
     let mut max_id = 0;
     let mut slept_max = 0;
     for (id, map) in &heat_map {
@@ -23,7 +22,7 @@ pub fn part_one(inp: &str) -> String {
             max_id = *id;
         }
     }
-    // we need the index of the peak of the heatmap
+    // index (minute) of the peak of guards heatmap
     let sleepiest_elf_hm = &heat_map.get(&max_id).unwrap();
     let mut sleepiest_minute = 0;
     for min in 0..sleepiest_elf_hm.heat_map.len() {
@@ -35,16 +34,13 @@ pub fn part_one(inp: &str) -> String {
 }
 
 pub fn part_two(inp: &str) -> String {
-    // 1) abstract all the copy/paste code from pt 1 into functions
     let mut clock: BTreeMap<DateTime<Utc>, Event> = BTreeMap::new();
     for line in inp.lines() {
         let (dt, event) = parse_line(line);
         clock.insert(dt, event);
     }
     let sleep_logs = build_sleep_logs(clock);
-    // build heat map of times slept per minute
     let heat_map = build_heat_map(&sleep_logs);
-    // find peak of entire heat map
     let mut map_peak_count = 0;
     let mut map_peak_minute = 0;
     let mut map_peak_id = 0;
