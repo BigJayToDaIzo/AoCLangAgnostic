@@ -3,6 +3,45 @@ pub fn read_lines() -> String {
 }
 
 pub fn part_one(inp: &str) -> String {
+    let (p_o_r_vec, updates_vec) = parse_input(inp);
+    let mut good_update_middle_page_nums = Vec::new();
+    'upd: for update in &updates_vec {
+        for rule in &p_o_r_vec {
+            if update.contains(&rule.before)
+                && update.contains(&rule.after)
+                && !update_in_order(update.to_vec(), &rule.before, &rule.after)
+            {
+                continue 'upd;
+            }
+        }
+        good_update_middle_page_nums.push(update[update.len() / 2]);
+    }
+    let mpn_sums: u32 = good_update_middle_page_nums.iter().sum();
+    mpn_sums.to_string()
+}
+
+pub fn part_two(inp: &str) -> String {
+    let (p_o_r_vec, updates_vec) = parse_input(inp);
+    // add pushing out of order updates into an array
+    let mut ooo_updates = Vec::new();
+    'upd: for update in &updates_vec {
+        for rule in &p_o_r_vec {
+            if update.contains(&rule.before)
+                && update.contains(&rule.after)
+                && !update_in_order(update.to_vec(), &rule.before, &rule.after)
+            {
+                ooo_updates.push(&update);
+            }
+        }
+    }
+    // run array through rules and FIX them
+    let fixed_bad_update_middle_page_nums = Vec::new();
+    // sum middle pages
+    let ooo_mpn_sums: u32 = fixed_bad_update_middle_page_nums.iter().sum();
+    ooo_mpn_sums.to_string()
+}
+
+fn parse_input(inp: &str) -> (Vec<OrderingRule>, Vec<Vec<u32>>) {
     let split_input: Vec<&str> = inp.split_terminator("\n\n").collect();
     let page_ordering_rules = split_input[0];
     let updates = split_input[1];
@@ -25,30 +64,11 @@ pub fn part_one(inp: &str) -> String {
             .collect();
         updates_vec.push(update_split);
     }
-    let mut good_update_middle_page_nums = Vec::new();
-    'upd: for update in &updates_vec {
-        for rule in &p_o_r_vec {
-            if update.contains(&rule.before)
-                && update.contains(&rule.after)
-                && !update_in_order(update.to_vec(), &rule.before, &rule.after)
-            {
-                continue 'upd;
-            }
-        }
-        good_update_middle_page_nums.push(update[update.len() / 2]);
-    }
-    let mpn_sums: u32 = good_update_middle_page_nums.iter().sum();
-    mpn_sums.to_string()
-}
-
-pub fn part_two(_inp: &str) -> String {
-    "".to_string()
+    (p_o_r_vec, updates_vec)
 }
 
 fn update_in_order(upd: Vec<u32>, before: &u32, after: &u32) -> bool {
-    // find index for before
     let i_b = upd.iter().position(|x| x == before).unwrap();
-    // find index for after
     let i_a = upd.iter().position(|x| x == after).unwrap();
     i_b < i_a
 }
