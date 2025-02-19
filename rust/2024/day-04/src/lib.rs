@@ -32,13 +32,10 @@ pub fn part_two(inp: &str) -> String {
 }
 
 fn check_cross(c: usize, r: usize, p: &[Vec<char>]) -> i32 {
-    // TODO: this is broken, but close
-    if p[c + 1][r + 1] == 'M' && p[c - 1][r - 1] == 'S'
-        || p[c + 1][r + 1] == 'S'
-            && p[c - 1][r - 1] == 'M'
-            && p[c - 1][r + 1] == 'M'
-            && p[c + 1][r - 1] == 'S'
-        || p[c - 1][r + 1] == 'S' && p[c + 1][r - 1] == 'M'
+    if (p[c + 1][r + 1] == 'M' && p[c - 1][r - 1] == 'S'
+        || p[c + 1][r + 1] == 'S' && p[c - 1][r - 1] == 'M')
+        && (p[c - 1][r + 1] == 'M' && p[c + 1][r - 1] == 'S'
+            || p[c - 1][r + 1] == 'S' && p[c + 1][r - 1] == 'M')
     {
         return 1;
     }
@@ -166,6 +163,6 @@ mod test {
 
         let res = part_two(&input);
 
-        assert_eq!(res, "");
+        assert_eq!(res, "1923");
     }
 }
