@@ -23,18 +23,18 @@ pub fn part_one(inp: &str) -> String {
 pub fn part_two(inp: &str) -> String {
     let (p_o_r_vec, updates_vec) = parse_input(inp);
     // add pushing out of order updates into an array
-    let mut ooo_updates = Vec::new();
-    'upd: for update in &updates_vec {
+    for update in &updates_vec {
         for rule in &p_o_r_vec {
             if update.contains(&rule.before)
                 && update.contains(&rule.after)
                 && !update_in_order(update.to_vec(), &rule.before, &rule.after)
             {
-                ooo_updates.push(&update);
+                // run update through rules and FIX it
+                // push middle page num of fixed update into
+                // fixed_bad_update_middle_page_nums array
             }
         }
     }
-    // run array through rules and FIX them
     let fixed_bad_update_middle_page_nums = Vec::new();
     // sum middle pages
     let ooo_mpn_sums: u32 = fixed_bad_update_middle_page_nums.iter().sum();
