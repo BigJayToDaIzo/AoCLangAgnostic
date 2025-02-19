@@ -5,11 +5,7 @@ pub fn read_lines() -> String {
 
 pub fn part_one(inp: &str) -> String {
     // create puzzle
-    let mut puzzle: Vec<Vec<char>> = Vec::new();
-    for line in inp.lines() {
-        let row: Vec<char> = line.chars().collect();
-        puzzle.push(row);
-    }
+    let puzzle = build_puzzle(inp);
     // count XMAS' in puzzle
     let mut xmas_count = 0;
     for col in 0..PUZZLE_LEN {
@@ -22,8 +18,40 @@ pub fn part_one(inp: &str) -> String {
     xmas_count.to_string()
 }
 
-pub fn part_two(_inp: &str) -> String {
-    "".to_string()
+pub fn part_two(inp: &str) -> String {
+    let puzzle = build_puzzle(inp);
+    let mut xmas_count = 0;
+    for col in 1..PUZZLE_LEN - 1 {
+        for row in 1..PUZZLE_LEN - 1 {
+            if puzzle[col][row] == 'A' {
+                xmas_count += check_cross(col, row, &puzzle);
+            }
+        }
+    }
+    xmas_count.to_string()
+}
+
+fn check_cross(c: usize, r: usize, p: &[Vec<char>]) -> i32 {
+    // TODO: this is broken, but close
+    if p[c + 1][r + 1] == 'M' && p[c - 1][r - 1] == 'S'
+        || p[c + 1][r + 1] == 'S'
+            && p[c - 1][r - 1] == 'M'
+            && p[c - 1][r + 1] == 'M'
+            && p[c + 1][r - 1] == 'S'
+        || p[c - 1][r + 1] == 'S' && p[c + 1][r - 1] == 'M'
+    {
+        return 1;
+    }
+    0
+}
+
+fn build_puzzle(inp: &str) -> Vec<Vec<char>> {
+    let mut puzzle: Vec<Vec<char>> = Vec::new();
+    for line in inp.lines() {
+        let row: Vec<char> = line.chars().collect();
+        puzzle.push(row);
+    }
+    puzzle
 }
 
 fn check_eight(col: usize, row: usize, puzzle: &[Vec<char>]) -> i32 {
@@ -138,6 +166,6 @@ mod test {
 
         let res = part_two(&input);
 
-        assert_eq!(res, "abc");
+        assert_eq!(res, "");
     }
 }
