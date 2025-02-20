@@ -23,7 +23,7 @@ pub fn part_one(inp: &str) -> String {
 pub fn part_two(inp: &str) -> String {
     let (p_o_r_vec, updates_vec) = parse_input(inp);
     // add pushing out of order updates into an array
-    for update in &updates_vec {
+    for update in updates_vec {
         for rule in &p_o_r_vec {
             if update.contains(&rule.before)
                 && update.contains(&rule.after)
