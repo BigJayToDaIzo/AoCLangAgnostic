@@ -25,8 +25,78 @@ pub fn part_one(inp: &str) -> String {
     sum_calibration_vals.to_string()
 }
 
-pub fn part_two(_inp: &str) -> String {
+pub fn part_two(inp: &str) -> String {
+    let digits: Vec<&str> = vec!["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+    let word_digits: Vec<&str> = vec![
+        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "zero",
+    ];
+    let mut first_digit_idx = usize::MAX;
+    let mut second_digit_idx = 0;
+    let mut first_digit_opt: Option<i32> = None;
+    let mut second_digit_opt: Option<i32> = None;
+
+    for line in inp.lines() {
+        for digit in &digits {
+            // if digit is_ascii_digit()
+            if let Some(idx) = line.find(digit) {
+                if idx < first_digit_idx {
+                    first_digit_idx = idx;
+                }
+                if idx > second_digit_idx {
+                    second_digit_idx = idx;
+                }
+            }
+        }
+        for digit in &word_digits {
+            if let Some(idx) = line.find(digit) {
+                if idx < first_digit_idx {
+                    first_digit_opt = parse_word_digit(digit);
+                }
+                if idx > second_digit_idx {
+                    second_digit_opt = parse_word_digit(digit);
+                }
+            }
+        }
+        match first_digit_opt {
+            Some(digit) => {
+                // multiply by 10 and add to second digit
+                dbg!(digit);
+            }
+            None => {
+                // parse from line with idx, then multiply by 10
+                // and add to second digit
+            }
+        }
+        match second_digit_opt {
+            Some(digit) => {
+                // add to first digit
+                dbg!(digit);
+            }
+            None => {
+                // parse second from line with idx
+                // add to first digit
+            }
+        }
+        // concat digits and convert to i32
+    }
+
     "abc".to_string()
+}
+
+fn parse_word_digit(digit: &str) -> Option<i32> {
+    match digit {
+        "one" => Some(1),
+        "two" => Some(2),
+        "three" => Some(3),
+        "four" => Some(4),
+        "five" => Some(5),
+        "six" => Some(6),
+        "seven" => Some(7),
+        "eight" => Some(8),
+        "nine" => Some(9),
+        "zero" => Some(0),
+        _ => None,
+    }
 }
 
 #[cfg(test)]
