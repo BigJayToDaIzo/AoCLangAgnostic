@@ -50,9 +50,11 @@ pub fn part_two(inp: &str) -> String {
         for digit in &word_digits {
             if let Some(idx) = line.find(digit) {
                 if idx < first_digit_idx {
+                    first_digit_idx = idx;
                     first_digit_opt = parse_word_digit(digit);
                 }
                 if idx > second_digit_idx {
+                    second_digit_idx = idx;
                     second_digit_opt = parse_word_digit(digit);
                 }
             }
@@ -60,6 +62,7 @@ pub fn part_two(inp: &str) -> String {
         match first_digit_opt {
             Some(digit) => {
                 // multiply by 10 and add to second digit
+                println!("first digit");
                 dbg!(digit);
             }
             None => {
@@ -70,6 +73,7 @@ pub fn part_two(inp: &str) -> String {
         match second_digit_opt {
             Some(digit) => {
                 // add to first digit
+                println!("second digit");
                 dbg!(digit);
             }
             None => {
