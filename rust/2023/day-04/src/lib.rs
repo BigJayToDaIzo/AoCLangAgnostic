@@ -7,10 +7,10 @@ pub fn read_lines() -> String {
 pub fn part_one(inp: &str) -> String {
     let card_map = fill_card_map(inp);
     let mut running_total_card_scores = 0;
-    for (_, card) in card_map {
+    for card in card_map.values() {
         let mut card_score: Option<i32> = None;
-        for card_num in card.card_nums {
-            if card.winning_nums.contains(&card_num) {
+        for card_num in &card.card_nums {
+            if card.winning_nums.contains(card_num) {
                 match card_score {
                     Some(score) => card_score = Some(score * 2),
                     None => card_score = Some(1),
@@ -25,11 +25,24 @@ pub fn part_one(inp: &str) -> String {
 }
 
 pub fn part_two(inp: &str) -> String {
+    let mut card_map = fill_card_map(inp);
+    // we have to add copies of cards on winning number matches
+    // I have to brain on this for awhile
+    for card in card_map.values_mut() {
+        while card.copies > 0 {
+            // do card stuffs
+            for card_num in &card.card_nums {
+                if card.winning_nums.contains(card_num) {}
+            }
+            // iterate copies down
+            card.copies -= 1;
+        }
+    }
     "".to_string()
 }
 
-fn fill_card_map(inp: &str) -> HashMap<i32, Card> {
-    let mut card_map: HashMap<i32, Card> = HashMap::new();
+fn fill_card_map(inp: &str) -> HashMap<i32, CopyableCard> {
+    let mut card_map: HashMap<i32, CopyableCard> = HashMap::new();
     for card in inp.lines() {
         let card = card.replace("Card ", "");
         // grab id from front of string
@@ -45,7 +58,8 @@ fn fill_card_map(inp: &str) -> HashMap<i32, Card> {
             .collect();
         card_map.insert(
             id,
-            Card {
+            CopyableCard {
+                copies: 1,
                 winning_nums,
                 card_nums,
             },
@@ -54,8 +68,8 @@ fn fill_card_map(inp: &str) -> HashMap<i32, Card> {
     card_map
 }
 
-#[derive(Debug)]
-struct Card {
+struct CopyableCard {
+    copies: i32,
     winning_nums: Vec<i32>,
     card_nums: Vec<i32>,
 }
