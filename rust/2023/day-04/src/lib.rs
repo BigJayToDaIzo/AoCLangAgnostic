@@ -26,18 +26,21 @@ pub fn part_one(inp: &str) -> String {
 
 pub fn part_two(inp: &str) -> String {
     let mut card_map = fill_card_map(inp);
-    // we have to add copies of cards on winning number matches
-    // I have to brain on this for awhile
-    for card in card_map.values_mut() {
-        while card.copies > 0 {
-            // do card stuffs
-            for card_num in &card.card_nums {
-                if card.winning_nums.contains(card_num) {}
+    let mut bonus_card_map = card_map.clone();
+    for (id, card) in card_map.iter_mut() {
+        let mut cards_won = 0;
+        // do card stuffs
+        for card_num in &card.card_nums {
+            if card.winning_nums.contains(card_num) {
+                cards_won += 1;
             }
-            // iterate copies down
-            card.copies -= 1;
+        }
+        // copy winning cards
+        for won_card in (id + 1)..=(id + 1 + cards_won) {
+            bonus_card_map.get_mut(&won_card).unwrap().copies += 1;
         }
     }
+    for (_, card) in bonus_card_map.iter_mut() {}
     "".to_string()
 }
 
@@ -68,6 +71,7 @@ fn fill_card_map(inp: &str) -> HashMap<i32, CopyableCard> {
     card_map
 }
 
+#[derive(Clone)]
 struct CopyableCard {
     copies: i32,
     winning_nums: Vec<i32>,
